@@ -78,3 +78,31 @@ sudo lshw -class memory
 ```
 
 ![ubuntuRAM](screenshots/ubuntuRAM.png)
+
+### 5. Получить информацию о жестком диске
+
+Ubuntu и CentOS
+
+Получить информацию о жестком диске можно используя комманду:
+
+```bash
+sudo lshw -class disk -class storage
+```
+
+![centosHDD](screenshots/centosHDD.png)
+
+### 6. Добавить в виртуальную машину второй сетевой интерфейс (вывести информацию о нем в виртуалках)
+
+Ubuntu и CentOS
+
+Сначала необходимо добавить дополнительный сетевой адаптер используя виртуальную машину:
+
+![](screenshots/2networkAdapter.png)
+
+Затем на виртуальной машине посмотреть добавленный интерфейс (по умолчанию в VirtualBox их 2):
+
+```bash
+ip a
+```
+
+![](screenshots/ubuntuNetwork.png)
