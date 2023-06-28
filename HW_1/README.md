@@ -31,8 +31,11 @@ localectl set-locale LANG=en_us.utf8
 Для изменения MOTD мы должны создать или изменить существующий файл ```/etc/motd``` на желаемый нами:
 
 CentOS:
+
 ![](screenshots/centosMOTD.png)
+
 Ubuntu:
+
 ![](screenshots/ubuntuMOTD.png)
 
 ### 2. Определить точную версию ядра
