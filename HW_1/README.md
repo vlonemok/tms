@@ -61,3 +61,20 @@ cat kernel_modules.txt
 
 ### 4. Просмотреть информацию о процессоре и модулях оперативной памяти
 
+Ubuntu и CentOS
+
+Просмотреть информацию о процессоре можно используя команду ниже:
+
+```bash
+lscpu
+```
+
+![centosCPU](screenshots/centosCPU.png)
+
+Просмотреть информацию о модулях оперативной памяти можно использовав команду:
+
+```bash
+sudo lshw -class memory
+```
+
+![ubuntuRAM](screenshots/ubuntuRAM.png)
