@@ -47,7 +47,7 @@ df /dev/sdb1
 
 ![lastCheckHome](screenshots/lastCheckHome.png)
 
-## Создать нового пользователя user_with_group с home-директорией /var/home/user:
+## 2.Создать нового пользователя user_with_group с home-директорией /var/home/user:
 
 ![secondTask](screenshots/secondTask.png)
 
