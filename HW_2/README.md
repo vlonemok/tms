@@ -73,8 +73,8 @@ sudo apt update && sudo apt install chrony
 sudo visudo
 ```
 
-![sudoVisudo](/assets/sudoVisudo.png)
+![sudoVisudo](screenshots/sudoVisudo.png)
 
 После проверяем возможность использовать эту команду пользователем user_with_group:
 
-![fifthTask](/assets/fifthTask.png)
+![fifthTask](screenshots/fifthTask.png)
