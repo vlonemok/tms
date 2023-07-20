@@ -4,9 +4,9 @@ free -h | awk '{ print $1, $4 }' | sed 's/total//g' | sed 's/shared/Свобод
 
 echo ""
 
-echo "Использование процессора: " 
-mpstat | awk '$12 ~ /[0-9.]+/ { print 100 - $12"%" }'
+echo -n "Использование процессора: " 
+mpstat | grep -A 5 "%idle" | tail -n 1 | awk '{ print 100 -  $ 12 }'
 
 echo ""
 
-echo "IP адрес: " && hostname -I
+echo -n "IP адрес: " && hostname -I
