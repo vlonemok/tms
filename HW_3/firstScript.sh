@@ -5,7 +5,7 @@ free -h | awk '{ print $1, $4 }' | sed 's/total//g' | sed 's/shared/Свобод
 echo ""
 
 echo -n "Использование процессора: " 
-mpstat | grep -A 5 "%idle" | tail -n 1 | awk '{ print 100 -  $ 12 }'
+sar -u 1 1 | awk '{ print $3 }' | sed 's/%user/CPU usage/g'
 
 echo ""
 
