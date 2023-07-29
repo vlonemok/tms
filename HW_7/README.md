@@ -66,9 +66,9 @@ git reflog
 git cherry-pick a8f11f4
 ```
 
-![task8_1](../../../../vlonemok/TMS_DevOps/kirill-mokeichev/HW_7/screenshots/task8_1.png)
+![task8_1](screenshots/task8_1.png)
 
-![task8_2](../../../../vlonemok/TMS_DevOps/kirill-mokeichev/HW_7/screenshots/task8_2.png)
+![task8_2](screenshots/task8_2.png)
 
 ## 9. Удалить последний коммит с помощью ```git reset```
 
