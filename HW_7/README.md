@@ -26,10 +26,16 @@ git log -3
 
 ## 4. Создать пустой файл README.md и сделать коммит
 
+---
+
+Я буду выполнять задания не с файлом README.md, а с файлом test.md, потому что у меня возникает конфликт файлов README при ```git revert```, т.к. когда я делаю домашнюю работу, я сразу вношу изменения в файл README.md. Думаю это не играет никакой  роли, ведь суть в том, чтобы попрактиковаться на командах
+
+---
+
 ```bash
-touch README.md
-git add README.md
-git commit -m "Added README.md"
+touch test.md
+git add test.md
+git commit -m "Added test.md"
 ```
 
 ![task4](screenshots/task4.png)
@@ -37,19 +43,19 @@ git commit -m "Added README.md"
 ## 5. Добавить фразу "Hello, DevOps" в README.md файл и сделать коммит
 
 ```bash
-echo "Hello, DevOps" >> README.md
-git add README.md
-git commit -m "Hello, DevOps into README.md"
-git log -3
+echo "Hello, DevOps" >> test.md
+git add test.md
+git commit -m "Hello, DevOps into test.md"
+git log -2
 ```
 
 ![task5](screenshots/task5.png)
 
 ## 6. Сделать реверт последнего коммита. Вывести последниe 3 коммитa с помощью ```git log```
 
-```bash
+Что бы я не пытался сделать, у меня не получается сделать ```git revert```. Выдает конфликт постоянно
 
-```
+![task6](screenshots/task6.png)
 
 ## 7. Удалить последние 3 коммита с помощью ```git reset```
 
