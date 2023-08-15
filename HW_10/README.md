@@ -20,7 +20,13 @@
 
 ## 4. Создать ```Bash``` скрипт ```not-empty-file.sh```, который считывает из ```STDIN``` имя файла и выводит в ```STDOUT``` его имя в случае, если он не является пустым. Проверить работу файла при помощи команды ```ls | ./not-empty-file.sh | xargs wc -l```
 
+Выполнение [not-empty-file.sh](not-empty-file.sh):
+
 ## 5. Создать скрипт ```generate-testing-matrix.sh```, в котором объявляется 2 массива (os - массив операционных систем и arch - массив архитектур процессора) и который выводит в консоль комбинации всех возможных пар ```<OS> - <ARCH>```. Например, ```linux-x86, linux-amd64```, и т.д
+
+Выполнение [generate-testing-matrix.sh](generate-testing-matrix.sh):
+
+![task5](screenshots/task5.png)
 
 ## 6. Обновить файл ```.github/workflows/validate-shell.yaml```, если он не совпадает с [данным файлом](https://github.com/tms-dos17-onl/_sandbox/blob/main/.github/workflows/validate-shell.yaml)
 
