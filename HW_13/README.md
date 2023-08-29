@@ -16,9 +16,11 @@ Latency на первых прогонах была в районе 1035 мс
 ```
 
 **Первый запрос**
+
 ![task3_2](screenshots/task3_2.png)
 
 **Последний запрос**
+
 ![task3_3](screenshots/task3_3.png)
 
 ## 4. Запустить ещё один экземпляр Python REST Api приложения на другом порту
@@ -47,7 +49,9 @@ python3 main.py 5001
 ```
 
 **Первый запрос**
+
 ![task6](screenshots/task6.png)
 
 **Последний запрос**
+
 ![task6_1](screenshots/task6_1.png)
