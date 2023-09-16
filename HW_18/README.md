@@ -43,4 +43,6 @@
 
 ![task6](screenshots/task6.png)
 
+![task6_2](screenshots/task6_2.png)
+
 ![task6_1](screenshots/task6_1.png)
