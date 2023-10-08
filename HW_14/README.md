@@ -26,8 +26,29 @@ openssl rsa -in private.pem -pubout -out public.pem
 
 ## 4. Сгенерировать публичный сертификат ```public-nginx.pem``` для ```private.pem``` через ```OpenSSL```, используя ```<LASTNAME>.io``` в качестве Common Name (CN)
 
+```bash
+openssl req -x509 -new -key private.pem -out public-nginx.pem -days 365
+```
+
+![task4](screenshots/task4.png)
+
 ## 5. Настроить Nginx на работу по HTTPS, используя сертификаты из предыдущего задания. Например, чтобы Nginx возвращал домашнюю страницу по HTTPS
+
+![task5_1](screenshots/task5_1.png)
+
+![task5](screenshots/task5.png)
 
 ## 6. Настроить доверие публичному сертификату в браузере и проверить это
 
+```
+Я перепробовал все способы настройки доверия сертификату в Chrome
+Не знаю почему, но у меня Chrome просто не хочет доверять сертификату
+```
+
 ## 7. А теперь открыть домашнюю страницу Nginx по HTTPS через ```curl``` не прибегая к опции ```-k```
+
+![task7](screenshots/task7.png)
+
+```
+Смешно получилось, что настроить доверие сертификату в WSL у меня вышло, а настроить доверие в Chrome вообще не получается
+```
