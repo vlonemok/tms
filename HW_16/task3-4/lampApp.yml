@@ -6,122 +6,100 @@
     - vars/vars.yml
 
   tasks:
-  - name: Install PHP
-    ansible.builtin.apt:
-      name: php8.1
-      state: latest
-
-  - name: Install Apache2
+  - name: Apt update
     ansible.builtin.apt:
       name: "{{ item }}"
-      state: latest
-    with_items:
-    - apache2
-    - libapache2-mod-php
-
-  - name: Create document root
-    file:
-      path: "/var/www/html/{{ http_host }}"
-      state: directory
-      owner: "{{ app_user }}"
-      mode: '0755'
-
-  - name: Install MariaDB Server and Client
-    ansible.builtin.apt:
-      name: "{{ item }}"
-      state: latest
       update_cache: yes
-    with_items:
-    - mariadb-server
-    - mariadb-client
+      state: latest
+      force_apt_get: yes
+    loop:
+      - aptitude
 
-  - name: Start MariaDB
-    service:
-      name: mariadb
-      state: restarted
-  
-  - name: Install pip
-    ansible.builtin.apt:
-      name: python3-pip
-      state: latest
-  
-  - name: Install PyMySQL
-    ansible.builtin.pip:
-      name: pymysql
-      state: latest
-  
-  - name: Install PHP dependencies
-    ansible.builtin.apt:
-      name: "{{ item }}"
-      state: latest
-    with_items:
-    - php8.1-curl
-    - php8.1-mysql
-  
-  - name: Download app from GitHub
-    ansible.builtin.get_url:
-      url: https://github.com/qyjohn/simple-lamp/archive/refs/heads/master.zip
-      dest: /tmp/simple-lamp.zip
-  
-  - name: Install unzip because next step causes error
+  - name: Install Unzip
     ansible.builtin.apt:
       name: unzip
+      state: present
+
+  - name: Install LAMP
+    ansible.builtin.apt:
+      name: "{{ item }}"
+      update_cache: yes
       state: latest
+    loop:
+      - mysql-server
+      - apache2
+      - php
+      - libapache2-mod-php
+      - php-mysql
+      - php-curl
+      - php-xml
+      - php-memcached
+      - python3-pymysql
+  
+  - name: Change /var/www permissions
+    ansible.builtin.file:
+      path: /var/www
+      state: directory
+      recurse: yes
+      owner: "{{ app_user }}"
+      group: "{{ app_user }}"
 
-  - name: Extract app
+  - name: Download simple-lamp and unzip
     ansible.builtin.unarchive:
-      src: /tmp/simple-lamp.zip
-      dest: /tmp
+      src: https://github.com/qyjohn/simple-lamp/archive/refs/heads/master.zip
+      dest: /var/www
       remote_src: yes
+      owner: "{{ app_user }}"
+      group: "{{ app_user }}"
+    tags: 
+      - DownloadApp
   
-  - name: Copy app to /var/www
-    ansible.builtin.copy:
-      src: /tmp/simple-lamp-master/
-      dest: "/var/www/{{ http_host }}"
-      owner: www-data
-      group: www-data
-      remote_src: yes
-  
-  - name: Start MariaDB
-    service:
-      name: mariadb
-      state: started
-  
-  - name: Restore DB
-    community.mysql.mysql_db:
-      name: "{{ mysql_db_name }}"
+  - name: Configure MySQL
+    become: true
+    ansible.builtin.mysql_user:
+      login_user: "{{ mysql_user }}"
+      login_password: "{{ mysql_user_password }}"
+      priv: "{{ mysql_db_name }}.*:ALL"
+      name: "{{ mysql_user }}"
+      password: "{{ mysql_user_password }}"
+      check_implicit_admin: true
       login_unix_socket: /var/run/mysqld/mysqld.sock
-      target: "/var/www/{{ http_host }}/simple_lamp.sql"
+
+  - name: Restore Database
+    become: true
+    ansible.builtin.mysql_db:
+      login_user: "{{ mysql_user }}"
+      login_password: "{{ mysql_user_password }}"
+      name: simple_lamp
       state: import
+      target: /var/www/{{ http_host }}/simple_lamp.sql
       force: true
+    tags:
+      - RestoreDB
 
-  - name: Disable default Apache site
-    shell: /usr/sbin/a2dissite 000-default.conf
-    when: disable_default
-    notify: Reload Apache
-
-  - name: Change directory ownership
+  - name: Change Uploads folder permissions
     ansible.builtin.file:
       path: /var/www/{{ http_host }}/uploads
       owner: www-data
       group: www-data
 
-  - name: Setup Apache2 config via template
-    ansible.builtin.template:
-      src: templates/apache.conf.j2
-      dest: "/etc/apache2/sites-available/{{ http_host }}.conf"
+  - name: Disable default apache site
+    ansible.builtin.command: a2dissite 000-default.conf
 
-  - name: Set up config.php
+  - name: Setup config.php via template
     ansible.builtin.template:
       src: "templates/config.php.j2"
-      dest: "/var/www/html/{{ http_host }}/index.php"
+      dest: "/var/www/{{ http_host }}/config.php"
+  
+  - name: Setup apache.conf via template
+    ansible.builtin.template:
+      src: "templates/apache.conf.j2"
+      dest: "/etc/apache2/sites-available/{{ http_host }}.conf"
 
-  - name: Enable Apache site
+  - name: Enable simple-lamp
     ansible.builtin.command: "a2ensite {{ http_host }}"
-    notify: Reload Apache
 
-  handlers:
-    - name: Reload Apache
-      service:
-        name: apache2
-        state: reloaded
+  - name: Reload apache
+    ansible.builtin.service:
+      name: apache2
+      state: reloaded
