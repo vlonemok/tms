@@ -9,6 +9,9 @@
 
 ## 3. Скачивает приложение <https://github.com/qyjohn/simple-lamp> как архив с GitHub и устанавливает его
 
+**Скриншот работы [плейбука](task3-4/lampApp.yml)**
+![task3_1](screenshots/task3_1.png)
+
 **Ниже скришот работы приложения**
 ![task3](screenshots/task3.png)
 
