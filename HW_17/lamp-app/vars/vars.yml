@@ -1,0 +1,9 @@
+---
+mysql_user: "ubuntu"
+mysql_user_password: "password"
+mysql_root_password: "123"
+mysql_db_name: "simple_lamp"
+app_user: "ubuntu"
+
+http_host: "simple-lamp-master"
+http_port: 80

@@ -1,0 +1,93 @@
+---
+  - name: Apt update
+    ansible.builtin.apt:
+      name: "{{ item }}"
+      update_cache: yes
+      state: latest
+      force_apt_get: yes
+    loop:
+      - aptitude
+
+  - name: Install unzip
+    ansible.builtin.apt:
+      name: unzip
+      state: present
+
+  - name: Install requiered packages
+    ansible.builtin.apt:
+      name: "{{ item }}"
+      update_cache: yes
+      state: latest
+    loop:
+      - libapache2-mod-php
+      - php-mysql
+      - php-memcached
+      - python3-pymysql
+  
+  - name: Change /var/www permissions
+    ansible.builtin.file:
+      path: /var/www
+      state: directory
+      recurse: yes
+      owner: "{{ app_user }}"
+      group: "{{ app_user }}"
+
+  - name: Download simple-lamp and unzip
+    ansible.builtin.unarchive:
+      src: https://github.com/qyjohn/simple-lamp/archive/refs/heads/master.zip
+      dest: /var/www
+      remote_src: yes
+      owner: "{{ app_user }}"
+      group: "{{ app_user }}"
+    tags: 
+      - DownloadApp
+  
+  - name: Add MySQL user
+    become: true
+    ansible.builtin.mysql_user:
+      login_user: "{{ mysql_user }}"
+      login_password: "{{ mysql_user_password }}"
+      priv: "{{ mysql_db_name }}.*:ALL"
+      name: "{{ mysql_user }}"
+      password: "{{ mysql_user_password }}"
+      check_implicit_admin: true
+      login_unix_socket: /var/run/mysqld/mysqld.sock
+
+  - name: Restore Database
+    become: true
+    ansible.builtin.mysql_db:
+      login_user: "{{ mysql_user }}"
+      login_password: "{{ mysql_user_password }}"
+      name: simple_lamp
+      state: import
+      target: /var/www/{{ http_host }}/simple_lamp.sql
+      force: true
+    tags:
+      - RestoreDB
+
+  - name: Change Uploads folder permissions
+    ansible.builtin.file:
+      path: /var/www/{{ http_host }}/uploads
+      owner: www-data
+      group: www-data
+
+  - name: Disable default apache site
+    ansible.builtin.command: a2dissite 000-default.conf
+
+  - name: Setup config.php via template
+    ansible.builtin.template:
+      src: "lamp-app/templates/config.php.j2"
+      dest: "/var/www/{{ http_host }}/config.php"
+  
+  - name: Setup apache.conf via template
+    ansible.builtin.template:
+      src: "lamp-app/templates/apache.conf.j2"
+      dest: "/etc/apache2/sites-available/{{ http_host }}.conf"
+
+  - name: Enable simple-lamp
+    ansible.builtin.command: "a2ensite {{ http_host }}"
+
+  - name: Reload apache
+    ansible.builtin.service:
+      name: apache2
+      state: reloaded

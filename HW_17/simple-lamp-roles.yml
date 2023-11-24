@@ -1,0 +1,14 @@
+---
+- name: Install simple-lamp using ansible roles
+  hosts: webservers
+  become: true
+  vars_files:
+    - /home/ubuntu/lamp17/lamp-app/vars/vars.yml
+
+
+  roles:
+    - geerlingguy.mysql
+    - geerlingguy.apache
+    - geerlingguy.php
+    - geerlingguy.memcached
+    - lamp-app
