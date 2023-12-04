@@ -15,6 +15,15 @@ docker run -d -p 8081:80 react_app
 
 ## 2. Написать Dockerfile для [LAMP приложения](https://github.com/qyjohn/simple-lamp), который устанавливает весь LAMP стек в один образ. Подсказка: для того, чтобы в Docker контейнере запускались службы, нужно установить systemd и задать его как ENTRYPOINT, а также запускать контейнер в привилегированном режиме. Например, как [тут](https://github.com/tms-dos17-onl/_sandbox/blob/main/lecture20/simple-lamp/Dockerfile)
 
+[Dockerfile 2 задания](/HW_20/task_2/Dockerfile)
+
+```bash
+docker build -t lamp-app .
+docker run --privileged -d -p 80:80 lamp-app
+```
+
+![task2](screenshots/task2.png)
+
 ## 3. Написать Dockerfile для [LAMP приложения](https://github.com/qyjohn/simple-lamp), который устанавливает только само приложение в Apache используя php:apache Docker образ. Написать docker-compose.yaml, который разворачивает зависимости приложения (MySQL и Memcached) и запускает само приложение. Обратить внимание на /docker-entrypoint-initdb.d mount для MySQL, использование которого описано в документации к MySQL Docker образу. Посмотреть, что такое [wait-for-it.sh](https://github.com/vishnubob/wait-for-it) и придумать, как его можно заиспользовать в этом задании
 
 ## 4. (**) Запустить [Java приложение](https://github.com/LorenzoBettini/docker-compose-java-example) с помощью docker-compose.yml, находящемся в репозитории
