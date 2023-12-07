@@ -1,0 +1,5 @@
+Hello, $KEY1! This is $KEY2.
+
+My name is Kirill
+I'm DevOps Trainee
+DevOps is interesting profession nowadays
