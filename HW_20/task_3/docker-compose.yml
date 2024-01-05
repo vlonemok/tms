@@ -1,0 +1,29 @@
+services:
+  simple-lamp:
+    image: simple-lamp
+    ports:
+      - "80:80"
+    restart: always
+    depends_on:
+      - mysql
+  mysql:
+    image: mysql:latest
+    container_name: mysql
+    restart: always
+    env_file:
+      - ".env"
+    environment:
+      - MYSQL_DATABASE=simple_lamp
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_USER=user
+      - MYSQL_PASSWORD=password
+    ports:
+      - "3306:3306"
+    volumes:
+      - "./simple_lamp.sql:/docker-entrypoint-initdb.d/simple_lamp.sql"
+      - "./mysql:/var/lib/mysql"
+  memcached:
+    image: memcached:latest
+    container_name: memcached
+    ports:
+      - 11211:11211

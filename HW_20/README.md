@@ -26,6 +26,17 @@ docker run --privileged -d -p 80:80 lamp-app
 
 ## 3. Написать Dockerfile для [LAMP приложения](https://github.com/qyjohn/simple-lamp), который устанавливает только само приложение в Apache используя php:apache Docker образ. Написать docker-compose.yaml, который разворачивает зависимости приложения (MySQL и Memcached) и запускает само приложение. Обратить внимание на /docker-entrypoint-initdb.d mount для MySQL, использование которого описано в документации к MySQL Docker образу. Посмотреть, что такое [wait-for-it.sh](https://github.com/vishnubob/wait-for-it) и придумать, как его можно заиспользовать в этом задании
 
+[Dockerfile 3 задания](task_3/Dockerfile)
+[docker-compose 3 задания](task_3/docker-compose.yml)
+
+```bash
+docker build -t simple-lamp .
+docker-compose build
+docker-compose up
+```
+
+![task3](screenshots/task3.png)
+
 ## 4. (**) Запустить [Java приложение](https://github.com/LorenzoBettini/docker-compose-java-example) с помощью docker-compose.yml, находящемся в репозитории
 
 ## 5. (**) Написать Ansible playbook, который будет устанавливать Docker и Docker Compose на целевую VM с помощью [роли](https://galaxy.ansible.com/ui/standalone/roles/geerlingguy/docker/), а затем будет запускать одно из следующих приложений с помощью [Docker Compose](https://stackoverflow.com/questions/62452039/how-to-run-docker-compose-commands-with-ansible)
