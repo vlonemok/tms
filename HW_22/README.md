@@ -11,3 +11,7 @@
 Описание аргументов командной строки скрипта:
 
 ```./converter.py --in-format {xml|json|yaml} [--in-file <IN_FILE>] --out-format {xml|json|yaml}```
+
+[Код конвертера](converter.py)
+
+![task1](<screenshots/task1.png>)
