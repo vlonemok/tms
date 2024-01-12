@@ -1,0 +1,26 @@
+pipeline {
+    agent { label 'parallels-node' }
+    triggers {
+        cron "0 * * * *"
+    }
+    stages {
+        stage ('Clone') {
+            steps {
+                sh 'rm -rf *'
+                sh 'git clone git@github.com:tms-dos17-onl/spring-petclinic.git'
+                sh "ls -la"
+            }
+        }
+        stage('Build') {
+            steps {
+                sh '/home/jenkins/workspace/HW_26/spring-petclinic/mvnw package -f /home/jenkins/workspace/HW_26/spring-petclinic/pom.xml'
+            }
+        }
+        stage ('Publish') {
+            steps {
+                junit 'spring-petclinic/target/surefire-reports/*.xml'
+                archiveArtifacts artifacts: "spring-petclinic/target/*.jar"
+            }
+        }
+    }
+}
