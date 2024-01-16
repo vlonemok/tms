@@ -1,0 +1,37 @@
+image: maven:latest
+
+stages:
+  - clone
+  - build
+  - publish
+  - notification
+
+clone-job:
+  stage: clone
+  artifacts:
+    paths:
+      - .
+  script:
+    - git clone https://$github_token@github.com/tms-dos17-onl/spring-petclinic.git
+
+build-job:
+   stage: build
+   artifacts:
+     paths:
+       - .
+   script:
+    - spring-petclinic/mvnw package -f spring-petclinic/pom.xml
+
+publish-job:
+  stage: publish
+  script:
+    - ls -la
+  artifacts:
+    reports:
+      junit:
+        - spring-petclinic/target/surefire-reports/*.xml
+
+notification-job:      
+  stage: notification 
+  script:
+    - echo "Оповещение отправляется автоматически на почту пользователя, поэтому его настраивать не нужно"
