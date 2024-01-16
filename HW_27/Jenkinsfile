@@ -1,0 +1,58 @@
+pipeline {
+    agent { label 'parallels-node' }
+       stages {
+        stage('Clone') {
+            steps {
+                sh "rm -rf ./*"
+                sh 'git clone git@github.com:tms-dos17-onl/spring-petclinic.git'
+                sh 'ls -la'
+                sh 'pwd'
+            }
+        }
+        stage('Build') {
+            steps {
+               sh "spring-petclinic/mvnw package -f spring-petclinic/pom.xml"
+                dir('spring-petclinic') {
+                    sh 'ls -la'
+                    sh 'pwd'
+                    stash includes: 'target/*.jar', name: 'jar'
+                }
+            }
+        }
+
+        stage('Integration Tests') {
+            agent {
+                docker {
+                    image 'gradle:8.2.0-jdk17-alpine'
+                    label 'parallels-node'
+                    args '--user root -v $HOME/my_docker_vol:/root/my_docker_vol'
+                    reuseNode true
+                }
+
+            }
+            steps {
+                sh 'echo "begin docker steps section"'
+                sh 'ls -la'
+                unstash name: 'jar'
+                sh 'ip a'
+                sh 'pwd'
+                sh 'ls -la target'
+                sh 'nohup java -jar target/spring-petclinic-3.1.0-SNAPSHOT.jar > log.txt 2> errors.txt < /dev/null &'
+                sh 'sleep 20'
+                sh 'apk add curl'
+                sh 'curl 127.0.0.1:8080'
+                sh 'echo "finish docker section"'
+            }
+        }
+        stage('Publish') {
+            steps {
+                sh 'ip a'
+                sh 'echo "start Publish section"'
+                sh 'ls -la'
+                sh 'ls -la target'
+                junit 'spring-petclinic/target/surefire-reports/*.xml'
+                archiveArtifacts artifacts: "spring-petclinic/target/*.jar", fingerprint: true
+            }
+        }
+    }
+}
