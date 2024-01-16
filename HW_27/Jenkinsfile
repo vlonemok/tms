@@ -1,6 +1,6 @@
 pipeline {
-    agent { label 'parallels-node' }
-       stages {
+    agent { label 'gcp-node' }
+    stages {
         stage('Clone') {
             steps {
                 sh "rm -rf ./*"
@@ -11,47 +11,34 @@ pipeline {
         }
         stage('Build') {
             steps {
-               sh "spring-petclinic/mvnw package -f spring-petclinic/pom.xml"
-                dir('spring-petclinic') {
-                    sh 'ls -la'
-                    sh 'pwd'
-                    stash includes: 'target/*.jar', name: 'jar'
-                }
+                sh "spring-petclinic/mvnw package -f spring-petclinic/pom.xml"
+                sh 'ls -la'
+                sh 'pwd'
+                stash includes: 'spring-petclinic/target/*.jar', name: 'jar'
             }
         }
-
         stage('Integration Tests') {
             agent {
                 docker {
-                    image 'gradle:8.2.0-jdk17-alpine'
-                    label 'parallels-node'
-                    args '--user root -v $HOME/my_docker_vol:/root/my_docker_vol'
+                    image 'maven:3.9.3-eclipse-temurin-17'
+                    args '-p 8080:8080'
                     reuseNode true
                 }
-
             }
             steps {
-                sh 'echo "begin docker steps section"'
-                sh 'ls -la'
                 unstash name: 'jar'
-                sh 'ip a'
+                sh 'ls -la'
                 sh 'pwd'
-                sh 'ls -la target'
-                sh 'nohup java -jar target/spring-petclinic-3.1.0-SNAPSHOT.jar > log.txt 2> errors.txt < /dev/null &'
+                sh 'java -jar spring-petclinic/target/*.jar &'
                 sh 'sleep 20'
-                sh 'apk add curl'
                 sh 'curl 127.0.0.1:8080'
-                sh 'echo "finish docker section"'
             }
         }
         stage('Publish') {
             steps {
-                sh 'ip a'
-                sh 'echo "start Publish section"'
                 sh 'ls -la'
-                sh 'ls -la target'
                 junit 'spring-petclinic/target/surefire-reports/*.xml'
-                archiveArtifacts artifacts: "spring-petclinic/target/*.jar", fingerprint: true
+                archiveArtifacts artifacts: "spring-petclinic/target/*.jar"
             }
         }
     }
